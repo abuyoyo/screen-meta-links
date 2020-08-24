@@ -1,0 +1,8 @@
+{
+	"name": "abuyoyo/screen-meta-links",
+	"description": "API for adding custom screen-meta-links alongside the 'Screen Options' and 'Help' links.",
+	"type": "library",
+	"autoload": {
+        "files": ["screen-meta-links.php"]
+    }
+}
