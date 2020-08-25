@@ -303,6 +303,7 @@ if( defined('DEMO_SCREEN_META_LINKS') ){
 }
 
 
+if ( ! function_exists( 'add_screen_meta_link' ) ):
 /**
  * Add a new link to the screen meta area.
  *
@@ -327,3 +328,4 @@ function add_screen_meta_link($id, $text, $href = '', $page, $attributes = null,
 	$sml_instance->register_request($id, $text, $href, $page, $attributes, $panel);
 	
 }
+endif;
