@@ -2,7 +2,7 @@
 /**
  * Plugin Name: abuyoyo / Screen Meta Links
  * Description: API for adding custom screen-meta-links alongside the "Screen Options" and "Help" links.
- * Version: 0.9
+ * Version: 0.10
  * Author: abuyoyo
  * Author URI: https://github.com/abuyoyo
  * Plugin URI: https://github.com/abuyoyo/screen-meta-links
