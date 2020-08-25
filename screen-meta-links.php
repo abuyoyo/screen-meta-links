@@ -303,16 +303,6 @@ if( defined('DEMO_SCREEN_META_LINKS') ){
 }
 
 
-//All versions of the class are stored in a global array 
-//and only the latest version is actually used. 
-// NOT USED
-global $ws_screen_options_versions;
-if ( !isset($ws_screen_options_versions) ){
-	$ws_screen_options_versions = array();
-}
-$ws_screen_options_versions['2.0'] = 'Screen_Meta_Links';
-
-
 /**
  * Add a new link to the screen meta area.
  *
