@@ -18,6 +18,7 @@
 
 define ( 'SML_FILE', __FILE__ );
 define ( 'SML_URL', plugin_dir_url( __FILE__ ) );
+define ( 'SML_PATH', plugin_dir_path( __FILE__ ) );
 
 if ( ! class_exists('Screen_Meta_Links') ):
 
@@ -54,10 +55,11 @@ class Screen_Meta_Links {
 		// inline solution
 		add_action( 'current_screen' , [ $this, 'setup_current_screen_meta_links' ], 100 );
 		add_action( 'admin_notices', [ $this, 'append_meta_links' ] ); // print inline sml script
+		add_action( 'admin_head', [ $this, 'print_inline_style'] );
 		
 		// external load solution 
 		// add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-		add_action( 'admin_print_styles', [ $this, 'add_link_styles' ] ); //admin_enqueue_styles too early
+		// add_action( 'admin_print_styles', [ $this, 'add_link_styles' ] ); //admin_enqueue_styles too early
 	}
 	
 	/**
@@ -297,6 +299,30 @@ class Screen_Meta_Links {
 		
 		wp_enqueue_style( 'screen-meta-links' , SML_URL . 'css/screen_meta_links.css');
 	}
+
+
+	/**
+	 * Output inline style tag.
+	 * 
+	 * Output the CSS code for custom screen meta links. Required because WP only
+	 * has styles for specific meta links (by #id), not meta links in general.
+	 * 
+	 * @hook admin_head
+	 */
+	public function print_inline_style(){
+
+		//Don't output the CSS if there are no custom meta links for this page.
+		if ( empty(self::$links) )
+			return;
+
+		ob_start();
+		include SML_PATH . 'css/screen_meta_links.css';	
+		$css =	ob_get_clean();
+
+		echo '<style>';
+		echo $css;
+		echo '</style>';
+	} 
 	
 	
 	private function json_encode($data){
