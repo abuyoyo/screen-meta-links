@@ -1,12 +1,12 @@
 <?php
-/*
-Plugin Name: abuyoyo / Screen Meta Links
-Description: API for adding custom screen-meta-links alongside the "Screen Options" and "Help" links.
-Version: 0.9
-Author: Janis Elsts, abuyoyo
-Author URI: https://w-shadow.com/blog/2010/06/30/add-new-buttons-alongside-screen-options-and-help/
+/**
+ * Plugin Name: abuyoyo / Screen Meta Links
+ * Description: API for adding custom screen-meta-links alongside the "Screen Options" and "Help" links.
+ * Version: 0.10
+ * Author: abuyoyo
+ * Author URI: https://github.com/abuyoyo
+ * Plugin URI: https://github.com/abuyoyo/screen-meta-links
 */
-
 /**
  * TODO:
  * 
@@ -19,7 +19,7 @@ Author URI: https://w-shadow.com/blog/2010/06/30/add-new-buttons-alongside-scree
 define ( 'SML_FILE', __FILE__ );
 define ( 'SML_URL', plugin_dir_url( __FILE__ ) );
 
-if ( !class_exists('Screen_Meta_Links') ):
+if ( ! class_exists('Screen_Meta_Links') ):
 
  
 class Screen_Meta_Links {
@@ -74,11 +74,11 @@ class Screen_Meta_Links {
 	 * 
 	 * Do not call this method directly. Instead, use the global add_screen_meta_link() function.
 	 * 
-	 * @param string $id  - Link ID. Should be unique and a valid value for a HTML ID attribute.
-	 * @param string $text - Link text.
-	 * @param string|array $page - The page(s) where you want to add the link.
-	 * @param array $attributes - Optional. Additional attributes for the link tag. Add 'aria-controls' => "{$id}-wrap" to toggle panel 
-	 * @Param callback $panel - Optional. Callback should print out screen-meta panel contents
+	 * @param string $id            - Link ID. Should be unique and a valid value for a HTML ID attribute.
+	 * @param string $text          - Link text.
+	 * @param string|string[] $page - The page(s) where you want to add the link.
+	 * @param array $attributes     - Optional. Additional attributes for the link tag. Add 'aria-controls' => "{$id}-wrap" to toggle panel 
+	 * @param callback $panel       - Optional. Callback should print out screen-meta panel contents
 	 *
 	 * @return void
 	 */
@@ -94,14 +94,14 @@ class Screen_Meta_Links {
 	 * @hook current_screen
 	 */
 	public function setup_current_screen_meta_links( $screen ){	
-		foreach(self::$registered_requests as $req_k => $args){
-			$this->process_request($req_k, $args['id'], $args['text'], $args['href'], $args['page'], $args['attributes'], $args['panel']);
+		foreach(self::$registered_requests as $request_index => $args){
+			$this->process_request($request_index, $args['id'], $args['text'], $args['href'], $args['page'], $args['attributes'], $args['panel']);
 		}
 	}
 	
 	
 	
-	private function process_request($req_k, $id, $text, $href, $page='', $attributes = null, $panel=''){
+	private function process_request($request_index, $id, $text, $href, $page='', $attributes = null, $panel=''){
 		
 		if ( ! $this->show_on_this_screen($id, $page) ){
 			return;
@@ -126,7 +126,7 @@ class Screen_Meta_Links {
 		if ($panel)
 			$link['class'] = 'button ' . $link['class'];
 
-		self::$links[$req_k] = $link;
+		self::$links[$request_index] = $link;
 	
 		
 		if ($panel){
@@ -134,7 +134,7 @@ class Screen_Meta_Links {
 				call_user_func($panel);
 			$panel =	ob_get_clean();
 			
-			self::$panels[$req_k] = $panel;
+			self::$panels[$request_index] = $panel;
 		}
 		
 	}
@@ -147,31 +147,31 @@ class Screen_Meta_Links {
 	 * Test if registered link should be displayed on this screen
 	 * 
 	 * @param $id
-	 * @param String|Array $pages - list of hook_suffix or screen id to show screen-meta-link on
+	 * @param String|String[] $pages - list of hook_suffix or screen id to show screen-meta-link on
 	 * 
 	 * @return Boolean
 	 */
 	private function show_on_this_screen($id, $pages){
 		global $hook_suffix;
 
-		$screen = convert_to_screen($hook_suffix);
-
-		if ( !is_array($pages) )
-			$pages = array($pages);
+		if ( ! is_array( $pages ) ){
+			$pages = [ $pages ];
+		}
 		
-		$add_to_this_page = false;
-		foreach($pages as $k => $page){
-			if (!$page)//ignore empty string. otherwise - will return same as '*' (on screen->id test)
+		$screen = convert_to_screen($hook_suffix);
+		$add_to_current_page = false;
+		foreach( $pages as $k => $page ){
+			if ( ! $page )//ignore empty string. otherwise - will return same as '*' (on screen->id test)
 				continue;
 			
 			$page_as_screen = convert_to_screen($page);
 			if ( $page == $hook_suffix || $page_as_screen->id == $screen->id || $page == '*' ){
-				$add_to_this_page = true;
+				$add_to_current_page = true;
 				break;
 			}
 		}
 		
-		return $add_to_this_page;
+		return $add_to_current_page;
 	}
 	
 	
@@ -303,16 +303,7 @@ if( defined('DEMO_SCREEN_META_LINKS') ){
 }
 
 
-//All versions of the class are stored in a global array 
-//and only the latest version is actually used. 
-// NOT USED
-global $ws_screen_options_versions;
-if ( !isset($ws_screen_options_versions) ){
-	$ws_screen_options_versions = array();
-}
-$ws_screen_options_versions['2.0'] = 'Screen_Meta_Links';
-
-
+if ( ! function_exists( 'add_screen_meta_link' ) ):
 /**
  * Add a new link to the screen meta area.
  *
@@ -337,3 +328,4 @@ function add_screen_meta_link($id, $text, $href = '', $page, $attributes = null,
 	$sml_instance->register_request($id, $text, $href, $page, $attributes, $panel);
 	
 }
+endif;
