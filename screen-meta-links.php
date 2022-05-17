@@ -302,10 +302,9 @@ if( defined('DEMO_SCREEN_META_LINKS') ){
 	include plugin_dir_path( __FILE__ ) . 'demo/demo_screen_meta_links.php' ;
 }
 
-
-if ( ! function_exists( 'add_screen_meta_link' ) ):
+if ( ! function_exists( 'wph_add_screen_meta_panel' ) ):
 /**
- * Add a new link to the screen meta area.
+ * Add a new link+panel to the screen meta area.
  *
  * This function can be called on current_screen hook (priority < 100) or earlier (admin_init is fine)
  * Plugin begins heavy-lifting (filtering and processing) on current_screen priority 100
@@ -318,7 +317,7 @@ if ( ! function_exists( 'add_screen_meta_link' ) ):
  * @param callback 		$panel - Optional. Callback should print out screen-meta panel contents
  * @return void
  */
-function add_screen_meta_link($id, $text, $href = '', $page, $attributes = null, $panel=''){
+function wph_add_screen_meta_panel($id, $text, $href = '', $page, $attributes = null, $panel=''){
 	
 	static $sml_instance = null;
 	if ( null === $sml_instance){
