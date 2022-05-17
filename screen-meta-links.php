@@ -47,11 +47,15 @@ class Screen_Meta_Links {
 		
 		self::$counter = -1;
 		
-		if( defined( 'DEBUG_SCREEN_META_LINKS' ) )
+		if( defined( 'DEBUG_SCREEN_META_LINKS' ) ){
 			self::$debug = true;
+		}
 		
+		// inline solution
 		add_action( 'current_screen' , [ $this, 'setup_current_screen_meta_links' ], 100 );
 		add_action( 'admin_notices', [ $this, 'append_meta_links' ] ); // print inline sml script
+		
+		// external load solution 
 		// add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 		add_action( 'admin_print_styles', [ $this, 'add_link_styles' ] ); //admin_enqueue_styles too early
 	}
@@ -100,7 +104,12 @@ class Screen_Meta_Links {
 	}
 	
 	
-	
+	/**
+	 * process_request
+	 * 
+	 * @todo sanitize user input!
+	 * @todo maybe don't use compact()
+	 */
 	private function process_request($request_index, $id, $text, $href, $page='', $attributes = null, $panel=''){
 		
 		if ( ! $this->show_on_this_screen($id, $page) ){
@@ -147,9 +156,9 @@ class Screen_Meta_Links {
 	 * Test if registered link should be displayed on this screen
 	 * 
 	 * @param $id
-	 * @param String|String[] $pages - list of hook_suffix or screen id to show screen-meta-link on
+	 * @param string|string[] $pages - list of hook_suffix or screen id to show screen-meta-link on
 	 * 
-	 * @return Boolean
+	 * @return boolean
 	 */
 	private function show_on_this_screen($id, $pages){
 		global $hook_suffix;
@@ -176,7 +185,10 @@ class Screen_Meta_Links {
 	
 	
 	/**
-	 * Enqueueing does not work
+	 * DISABLED/UNUSED
+	 * 
+	 * Enqueueing does not work.
+	 * Instead we add our script and data inline using append_meta_links().
 	 * 
 	 * @see append_meta_links()
 	 */
@@ -263,10 +275,17 @@ class Screen_Meta_Links {
 	
 	
 	/**
+	 * DISABLED/UNUSED
+	 * 
 	 * Output the CSS code for custom screen meta links. Required because WP only
 	 * has styles for specific meta links (by #id), not meta links in general.
 	 * 
 	 * Callback for 'admin_print_styles'.
+	 * 
+	 * This function is unused because we cannot reliably obtain URL of css file.
+	 * Instead we add inline style using print_inline_style().
+	 * 
+	 * @see print_inline_style
 	 * 
 	 * @access public 
 	 * @return void
@@ -316,6 +335,8 @@ if ( ! function_exists( 'wph_add_screen_meta_panel' ) ):
  * @param array 		$attributes - Optional. Additional attributes for the link tag. Add 'aria-controls' => "{$id}-wrap" to toggle panel 
  * @param callback 		$panel - Optional. Callback should print out screen-meta panel contents
  * @return void
+ * 
+ * @todo Remove $href parameter and functionailty
  */
 function wph_add_screen_meta_panel($id, $text, $href = '', $page, $attributes = null, $panel=''){
 	
