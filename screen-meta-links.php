@@ -2,7 +2,7 @@
 /**
  * Plugin Name: abuyoyo / Screen Meta Links
  * Description: API for adding custom screen-meta-links alongside the "Screen Options" and "Help" links.
- * Version: 0.10
+ * Version: 0.11
  * Author: abuyoyo
  * Author URI: https://github.com/abuyoyo
  * Plugin URI: https://github.com/abuyoyo/screen-meta-links
@@ -18,6 +18,7 @@
 
 define ( 'SML_FILE', __FILE__ );
 define ( 'SML_URL', plugin_dir_url( __FILE__ ) );
+define ( 'SML_PATH', plugin_dir_path( __FILE__ ) );
 
 if ( ! class_exists('Screen_Meta_Links') ):
 
@@ -47,13 +48,18 @@ class Screen_Meta_Links {
 		
 		self::$counter = -1;
 		
-		if( defined( 'DEBUG_SCREEN_META_LINKS' ) )
+		if( defined( 'DEBUG_SCREEN_META_LINKS' ) ){
 			self::$debug = true;
+		}
 		
+		// inline solution
 		add_action( 'current_screen' , [ $this, 'setup_current_screen_meta_links' ], 100 );
 		add_action( 'admin_notices', [ $this, 'append_meta_links' ] ); // print inline sml script
+		add_action( 'admin_head', [ $this, 'print_inline_style'] );
+		
+		// external load solution 
 		// add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-		add_action( 'admin_print_styles', [ $this, 'add_link_styles' ] ); //admin_enqueue_styles too early
+		// add_action( 'admin_print_styles', [ $this, 'add_link_styles' ] ); //admin_enqueue_styles too early
 	}
 	
 	/**
@@ -100,7 +106,12 @@ class Screen_Meta_Links {
 	}
 	
 	
-	
+	/**
+	 * process_request
+	 * 
+	 * @todo sanitize user input!
+	 * @todo maybe don't use compact()
+	 */
 	private function process_request($request_index, $id, $text, $href, $page='', $attributes = null, $panel=''){
 		
 		if ( ! $this->show_on_this_screen($id, $page) ){
@@ -147,9 +158,9 @@ class Screen_Meta_Links {
 	 * Test if registered link should be displayed on this screen
 	 * 
 	 * @param $id
-	 * @param String|String[] $pages - list of hook_suffix or screen id to show screen-meta-link on
+	 * @param string|string[] $pages - list of hook_suffix or screen id to show screen-meta-link on
 	 * 
-	 * @return Boolean
+	 * @return boolean
 	 */
 	private function show_on_this_screen($id, $pages){
 		global $hook_suffix;
@@ -176,7 +187,10 @@ class Screen_Meta_Links {
 	
 	
 	/**
-	 * Enqueueing does not work
+	 * DISABLED/UNUSED
+	 * 
+	 * Enqueueing does not work.
+	 * Instead we add our script and data inline using append_meta_links().
 	 * 
 	 * @see append_meta_links()
 	 */
@@ -263,10 +277,17 @@ class Screen_Meta_Links {
 	
 	
 	/**
+	 * DISABLED/UNUSED
+	 * 
 	 * Output the CSS code for custom screen meta links. Required because WP only
 	 * has styles for specific meta links (by #id), not meta links in general.
 	 * 
 	 * Callback for 'admin_print_styles'.
+	 * 
+	 * This function is unused because we cannot reliably obtain URL of css file.
+	 * Instead we add inline style using print_inline_style().
+	 * 
+	 * @see print_inline_style
 	 * 
 	 * @access public 
 	 * @return void
@@ -278,12 +299,31 @@ class Screen_Meta_Links {
 		
 		wp_enqueue_style( 'screen-meta-links' , SML_URL . 'css/screen_meta_links.css');
 	}
-	
-	
-	private function json_encode($data){
-		return json_encode($data);
+
+
+	/**
+	 * Output inline style tag.
+	 * 
+	 * Output the CSS code for custom screen meta links. Required because WP only
+	 * has styles for specific meta links (by #id), not meta links in general.
+	 * 
+	 * @hook admin_head
+	 */
+	public function print_inline_style(){
+
+		//Don't output the CSS if there are no custom meta links for this page.
+		if ( empty(self::$links) )
+			return;
+
+		ob_start();
+		include SML_PATH . 'css/screen_meta_links.css';	
+		$css =	ob_get_clean();
+
+		echo '<style>';
+		echo $css;
+		echo '</style>';
 	}
-	
+
 }
 
 
@@ -302,10 +342,9 @@ if( defined('DEMO_SCREEN_META_LINKS') ){
 	include plugin_dir_path( __FILE__ ) . 'demo/demo_screen_meta_links.php' ;
 }
 
-
-if ( ! function_exists( 'add_screen_meta_link' ) ):
+if ( ! function_exists( 'wph_add_screen_meta_panel' ) ):
 /**
- * Add a new link to the screen meta area.
+ * Add a new link+panel to the screen meta area.
  *
  * This function can be called on current_screen hook (priority < 100) or earlier (admin_init is fine)
  * Plugin begins heavy-lifting (filtering and processing) on current_screen priority 100
@@ -317,8 +356,10 @@ if ( ! function_exists( 'add_screen_meta_link' ) ):
  * @param array 		$attributes - Optional. Additional attributes for the link tag. Add 'aria-controls' => "{$id}-wrap" to toggle panel 
  * @param callback 		$panel - Optional. Callback should print out screen-meta panel contents
  * @return void
+ * 
+ * @todo Remove $href parameter and functionailty
  */
-function add_screen_meta_link($id, $text, $href = '', $page, $attributes = null, $panel=''){
+function wph_add_screen_meta_panel($id, $text, $href = '', $page, $attributes = null, $panel=''){
 	
 	static $sml_instance = null;
 	if ( null === $sml_instance){
