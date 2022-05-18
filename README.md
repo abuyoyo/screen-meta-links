@@ -8,8 +8,6 @@ API for adding custom screen-meta-links alongside the "Screen Options" and "Help
 
 This library uses render-blocking javascript to get get around WordPress's lack of API for adding tabs to the screen-meta-links.
 
-Screen-Meta-Links API is a fork/rewrite and expansion of [Janis Elsts's Screen-Meta-Links Class](https://w-shadow.com/blog/2010/06/30/add-new-buttons-alongside-screen-options-and-help/) and is fully compatible with all plugins that use Janis Elsts's `add_screen_meta_link()`. It allows adding fully functional panels to any (or all admin page).
-
 ## Installation
 
 ### WordPress Plugin
@@ -22,16 +20,8 @@ Screen-Meta-Links can also be used as library by using Composer
 composer install abuyoyo\screen-meta-links
 ```
 
-## Added
-
-- Can add panels (not just button links like the original)
-- Page registration optimized
-
-
 ## Compatibility with original Screen-Meta-Links classes
 
-- The `add_screen_meta_link()` signature is backwards-compatible with original function.
-- The page registration process has been rewritten/optimized but delivers the same results.
 - $page parameter accepts single string or array of strings. Either file string `index.php` or name `dashboard`. Use `*` to display panel on all pages. Empty string will disable panel on all pages.
 - If only `$href` is provided without corresponding `$panel` - a simple link will be added.
 - If both `$href` and `$panel` are provided - a button and panel are added.
@@ -57,7 +47,7 @@ composer install abuyoyo\screen-meta-links
  *
  * @return void
  */
-add_screen_meta_link( $id, $text, $href, $page, $attributes, $panel );
+wph_add_screen_meta_panel( $id, $text, $href, $page, $attributes, $panel );
 
 ```
 

@@ -2,10 +2,21 @@
 
 API for adding custom `screen-meta-links` links and panels alongside the 'Screen Options' and 'Help' links on the WordPress admin page.
 
-This is a modified fork of Janis Elsts' library of the same name and is compatible with other plugins using this library.
-Library can be imported both as a WordPress plugin or composer library.
+## [0.11](https://github.com/abuyoyo/screen-meta-links/releases/tag/0.11)
 
-## [0.10]https://github.com/abuyoyo/screen-meta-links/releases/tag/0.10)
+### Removed
+- Drop support for `add_screen_meta_link`. This is a backward-incopatible change!
+
+### Added
+- New API function `wph_add_screen_meta_panel` replaces `add_screen_meta_link`.
+
+### Changed
+- Style is printed in inline style tag.
+
+### Fixed
+- Fix conflict with other plugins importing `add_screen_meta_link` such as `broken-link-checker` (issue #1).
+
+## [0.10](https://github.com/abuyoyo/screen-meta-links/releases/tag/0.10)
 
 ### Added
 - Add `composer.json` file. Library can be imported as composer library.
