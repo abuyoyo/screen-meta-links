@@ -322,13 +322,8 @@ class Screen_Meta_Links {
 		echo '<style>';
 		echo $css;
 		echo '</style>';
-	} 
-	
-	
-	private function json_encode($data){
-		return json_encode($data);
 	}
-	
+
 }
 
 
