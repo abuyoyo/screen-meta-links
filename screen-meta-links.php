@@ -16,9 +16,9 @@
  * 
  */
 
-define ( 'SML_FILE', __FILE__ );
-define ( 'SML_URL', plugin_dir_url( __FILE__ ) );
-define ( 'SML_PATH', plugin_dir_path( __FILE__ ) );
+! defined( 'SML_FILE' ) && define ( 'SML_FILE', __FILE__                    );
+! defined( 'SML_URL'  ) && define ( 'SML_URL' , plugin_dir_url( __FILE__ )  );
+! defined( 'SML_PATH' ) && define ( 'SML_PATH', plugin_dir_path( __FILE__ ) );
 
 if ( ! class_exists('Screen_Meta_Links') ):
 
