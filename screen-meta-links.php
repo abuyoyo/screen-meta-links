@@ -2,7 +2,7 @@
 /**
  * Plugin Name: abuyoyo / Screen Meta Links
  * Description: API for adding custom screen-meta-links alongside the "Screen Options" and "Help" links.
- * Version: 0.11
+ * Version: 0.12
  * Author: abuyoyo
  * Author URI: https://github.com/abuyoyo
  * Plugin URI: https://github.com/abuyoyo/screen-meta-links
@@ -16,9 +16,9 @@
  * 
  */
 
-define ( 'SML_FILE', __FILE__ );
-define ( 'SML_URL', plugin_dir_url( __FILE__ ) );
-define ( 'SML_PATH', plugin_dir_path( __FILE__ ) );
+! defined( 'SML_FILE' ) && define ( 'SML_FILE', __FILE__                    );
+! defined( 'SML_URL'  ) && define ( 'SML_URL' , plugin_dir_url( __FILE__ )  );
+! defined( 'SML_PATH' ) && define ( 'SML_PATH', plugin_dir_path( __FILE__ ) );
 
 if ( ! class_exists('Screen_Meta_Links') ):
 
