@@ -352,14 +352,15 @@ if ( ! function_exists( 'wph_add_screen_meta_panel' ) ):
  * @param string 		$id - Link ID. Should be unique and a valid value for a HTML ID attribute.
  * @param string 		$text - Link text.
  * @param string 		$href - Optional. Link URL to be used if no panel is provided
- * @param string|array 	$page - The page(s) where you want to add the link.
+ * @param string|array 	$page - Optional. The page(s) where you want to add the link. Accepts wildcard '*'. If left empty will not add to any page.
  * @param array 		$attributes - Optional. Additional attributes for the link tag. Add 'aria-controls' => "{$id}-wrap" to toggle panel 
  * @param callback 		$panel - Optional. Callback should print out screen-meta panel contents
  * @return void
  * 
  * @todo Remove $href parameter and functionailty
+ * @todo $page should not be optional. We need to remove $href first.
  */
-function wph_add_screen_meta_panel($id, $text, $href = '', $page, $attributes = null, $panel=''){
+function wph_add_screen_meta_panel( $id, $text, $href = '', $page = '', $attributes = null, $panel='' ){
 	
 	static $sml_instance = null;
 	if ( null === $sml_instance){
