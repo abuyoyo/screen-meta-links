@@ -2,6 +2,11 @@
 
 API for adding custom `screen-meta-links` links and panels alongside the 'Screen Options' and 'Help' links on the WordPress admin page.
 
+## [0.13](https://github.com/abuyoyo/screen-meta-links/releases/tag/0.13)
+
+### Fixed
+- Fix PHP 8.2 depreacted: Optional parameter declared before required parameter.
+
 ## [0.12](https://github.com/abuyoyo/screen-meta-links/releases/tag/0.12)
 
 ### Fixed

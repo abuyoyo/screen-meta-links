@@ -2,7 +2,7 @@
 /**
  * Plugin Name: abuyoyo / Screen Meta Links
  * Description: API for adding custom screen-meta-links alongside the "Screen Options" and "Help" links.
- * Version: 0.12
+ * Version: 0.13
  * Author: abuyoyo
  * Author URI: https://github.com/abuyoyo
  * Plugin URI: https://github.com/abuyoyo/screen-meta-links
@@ -360,7 +360,7 @@ if ( ! function_exists( 'wph_add_screen_meta_panel' ) ):
  * @todo Remove $href parameter and functionailty
  * @todo $page should not be optional. We need to remove $href first.
  */
-function wph_add_screen_meta_panel( $id, $text, $href = '', $page = '', $attributes = null, $panel='' ){
+function wph_add_screen_meta_panel( $id, $text, $href = '', $page = '', $attributes = null, $panel = '' ){
 	
 	static $sml_instance = null;
 	if ( null === $sml_instance){
